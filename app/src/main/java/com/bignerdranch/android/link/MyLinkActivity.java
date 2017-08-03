@@ -1,37 +1,49 @@
 package com.bignerdranch.android.link;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyLinkActivity extends AppCompatActivity {
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_link);
 
-        RecyclerView rvMyLink = (RecyclerView) findViewById(R.id.rv_my_link);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        rvMyLink.setHasFixedSize(true);
-        rvMyLink.setLayoutManager(layoutManager);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("LINKS"));
+        tabLayout.addTab(tabLayout.newTab().setText("PLAYLISTS"));
+        tabLayout.addTab(tabLayout.newTab().setText("FOLLOWING"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        List<MyLink> items = new ArrayList<>();
-        MyLink[] item = new MyLink[5];
-        item[0] = new MyLink(R.drawable.thumbnail, "title", "explanation");
-        item[1] = new MyLink(R.drawable.thumbnail, "title", "explanation");
-        item[2] = new MyLink(R.drawable.thumbnail, "title", "explanation");
-        item[3] = new MyLink(R.drawable.thumbnail, "title", "explanation");
-        item[4] = new MyLink(R.drawable.thumbnail, "title", "explanation");
+        viewPager = (ViewPager) findViewById(R.id.pager);
 
-        for(int i = 0; i < 5; i++) {
-            items.add(item[i]);
-        }
+        TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        rvMyLink.setAdapter(new MyLinkAdapter(getApplicationContext(), items, R.layout.activity_my_link));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 }
